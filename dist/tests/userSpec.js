@@ -1,64 +1,62 @@
-// import { Order, OrderStore } from '../models/order';
-
-// const store = new OrderStore();
-
-// describe('Order Model', () => {
+"use strict";
+// import { User, UserStore } from '../models/user';
+// const store = new UserStore();
+// describe('User Model', () => {
 //   it('should have an index method', () => {
 //     expect(store.index).toBeDefined();
 //   });
-
 //   it('should have a show method', () => {
 //     expect(store.index).toBeDefined();
 //   });
-
 //   it('should have a create method', () => {
 //     expect(store.index).toBeDefined();
 //   });
-
 //   it('should have a update method', () => {
 //     expect(store.index).toBeDefined();
 //   });
-
 //   it('should have a delete method', () => {
 //     expect(store.index).toBeDefined();
 //   });
-
-//   it('create method should add an order', async () => {
+//   it('create method should add a user', async () => {
 //     const result = await store.create({
-//       status: 'out for delivery',
-//       user_id: 1234567890,
+//       username: 'stephcurry30',
+//       firstname: 'Steph',
+//       lastname: 'Curry',
+//       password: '',
 //     });
 //     expect(result).toEqual({
 //       id: 1,
-//       status: 'out for delivery',
-//       user_id: 1234567890,
+//       username: 'stephcurry30',
+//       firstname: 'Steph',
+//       lastname: 'Curry',
+//       password: '',
 //     });
 //   });
-
-//   it('index method should return a list of orders', async () => {
+//   it('index method should return a list of users', async () => {
 //     const result = await store.index();
 //     expect(result).toEqual([
 //       {
 //         id: 1,
-//         status: 'out for delivery',
-//         user_id: 1234567890,
+//         username: 'stephcurry30',
+//         firstname: 'Steph',
+//         lastname: 'Curry',
+//         password: '',
 //       },
 //     ]);
 //   });
-
-//   it('show method should return the correct order', async () => {
+//   it('show method should return the correct user', async () => {
 //     const result = await store.show('1');
 //     expect(result).toEqual({
 //       id: 1,
-//       status: 'out for delivery',
-//       user_id: 1234567890,
+//       username: 'stephcurry30',
+//       firstname: 'Steph',
+//       lastname: 'Curry',
+//       password: '',
 //     });
 //   });
-
-//   it('delete method should remove the order', async () => {
+//   it('delete method should remove the user', async () => {
 //     store.delete('1');
 //     const result = await store.index();
-
 //     expect(result).toEqual([]);
 //   });
 // });
