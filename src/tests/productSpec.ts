@@ -59,10 +59,10 @@ describe('Product Model', () => {
     });
   });
 
-  // it('delete method should remove the product', async () => {
-  //   store.delete('1');
-  //   const result = await store.index();
+  it('delete method should remove the product', async () => {
+    store.delete('1');
+    const result = await store.index();
 
-  //   expect(result).toEqual([]);
-  // });
+    expect(result).toEqual([]);
+  });
 });
