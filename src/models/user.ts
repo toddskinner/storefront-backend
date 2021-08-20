@@ -6,7 +6,7 @@ const saltRounds: string = process.env.SALT_ROUNDS!;
 const pepper: string = process.env.BCRYPT_PASSWORD!;
 
 export type User = {
-  id?: Number;
+  id?: number | string;
   username: string;
   firstname: string;
   lastname: string;
@@ -54,7 +54,7 @@ export class UserStore {
 
   async authenticate(username: string, password: string): Promise<User | null> {
     const conn = await Client.connect();
-    const sql = 'SELECT password_digest FROM users WHERE username=($1)';
+    const sql = 'SELECT password FROM users WHERE username=($1)';
 
     const result = await conn.query(sql, [username]);
 
@@ -65,7 +65,7 @@ export class UserStore {
 
       console.log(user);
 
-      if (bcrypt.compareSync(password + pepper, user.password_digest)) {
+      if (bcrypt.compareSync(password + pepper, user.password)) {
         return user;
       }
     }
@@ -90,18 +90,19 @@ export class UserStore {
 
   async delete(id: string): Promise<User> {
     try {
-      const conn = await Client.connect();
       const sql = 'DELETE FROM users WHERE id=($1)';
+
+      const conn = await Client.connect();
 
       const result = await conn.query(sql, [id]);
 
-      const product = result.rows[0];
+      const user = result.rows[0];
 
       conn.release();
 
-      return product;
+      return user;
     } catch (err) {
-      throw new Error(`unable to delete user (${id}): ${err}`);
+      throw new Error(`Could not delete user ${id}. Error: ${err}`);
     }
   }
 }

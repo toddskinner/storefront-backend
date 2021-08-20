@@ -45,13 +45,13 @@ class UserStore {
     }
     async authenticate(username, password) {
         const conn = await database_1.default.connect();
-        const sql = 'SELECT password_digest FROM users WHERE username=($1)';
+        const sql = 'SELECT password FROM users WHERE username=($1)';
         const result = await conn.query(sql, [username]);
         console.log(password + pepper);
         if (result.rows.length) {
             const user = result.rows[0];
             console.log(user);
-            if (bcrypt_1.default.compareSync(password + pepper, user.password_digest)) {
+            if (bcrypt_1.default.compareSync(password + pepper, user.password)) {
                 return user;
             }
         }
@@ -72,15 +72,15 @@ class UserStore {
     }
     async delete(id) {
         try {
-            const conn = await database_1.default.connect();
             const sql = 'DELETE FROM users WHERE id=($1)';
+            const conn = await database_1.default.connect();
             const result = await conn.query(sql, [id]);
-            const product = result.rows[0];
+            const user = result.rows[0];
             conn.release();
-            return product;
+            return user;
         }
         catch (err) {
-            throw new Error(`unable to delete user (${id}): ${err}`);
+            throw new Error(`Could not delete user ${id}. Error: ${err}`);
         }
     }
 }

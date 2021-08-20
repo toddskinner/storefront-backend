@@ -61,8 +61,8 @@ const destroy = async (req, res) => {
 };
 const product_routes = (app) => {
     app.get('/products', index);
-    app.get('/products/:id', show);
+    app.get('/products/{:id}', show);
     app.post('/products', create);
-    app.delete('/products/:id', destroy);
+    app.delete('/products/{:id}', destroy);
 };
 exports.default = product_routes;

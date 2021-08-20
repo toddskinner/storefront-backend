@@ -5,3 +5,4 @@ CREATE TABLE products (
     price integer NOT NULL,
     category integer NOT NULL
 );
+
