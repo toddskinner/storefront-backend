@@ -56,4 +56,24 @@ export class DashboardQueries {
       throw new Error(`unable get products by price: ${err}`);
     }
   }
+
+  // Get the five most expensive products
+  async fiveMostPopular(): Promise<
+    { name: string; price: number; category: string }[]
+  > {
+    try {
+      //@ts-ignore
+      const conn = await Client.connect();
+      const sql =
+        'SELECT name, price FROM products ORDER BY price DESC LIMIT 5';
+
+      const result = await conn.query(sql);
+
+      conn.release();
+
+      return result.rows;
+    } catch (err) {
+      throw new Error(`unable get products by price: ${err}`);
+    }
+  }
 }

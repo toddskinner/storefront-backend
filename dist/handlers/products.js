@@ -14,6 +14,10 @@ const show = async (req, res) => {
     const product = await store.show(req.body.id);
     res.json(product);
 };
+const productsByCategory = async (req, res) => {
+    const products = await store.productsByCategory(req.body.category);
+    res.json(products);
+};
 const create = async (req, res) => {
     try {
         const authorizationHeader = req.headers.authorization;
@@ -39,30 +43,29 @@ const create = async (req, res) => {
         res.json(err);
     }
 };
-const destroy = async (req, res) => {
-    try {
-        const authorizationHeader = req.headers.authorization;
-        const token = authorizationHeader.split(' ')[1];
-        jsonwebtoken_1.default.verify(token, process.env.TOKEN_SECRET);
-    }
-    catch (err) {
-        res.status(401);
-        res.json('Access denied, invalid token');
-        return;
-    }
-    try {
-        const deleted = await store.delete(req.body.id);
-        res.json(deleted);
-    }
-    catch (error) {
-        res.status(400);
-        res.json({ error });
-    }
-};
+// const destroy = async (req: Request, res: Response) => {
+//   try {
+//     const authorizationHeader = req.headers.authorization!;
+//     const token = authorizationHeader.split(' ')[1];
+//     jwt.verify(token, process.env.TOKEN_SECRET!);
+//   } catch (err) {
+//     res.status(401);
+//     res.json('Access denied, invalid token');
+//     return;
+//   }
+//   try {
+//     const deleted = await store.delete(req.body.id);
+//     res.json(deleted);
+//   } catch (error) {
+//     res.status(400);
+//     res.json({ error });
+//   }
+// };
 const product_routes = (app) => {
     app.get('/products', index);
     app.get('/products/{:id}', show);
     app.post('/products', create);
-    app.delete('/products/{:id}', destroy);
+    app.get('/products/{:category}', productsByCategory);
+    // app.delete('/products/{:id}', destroy);
 };
 exports.default = product_routes;

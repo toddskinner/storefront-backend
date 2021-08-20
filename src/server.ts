@@ -4,10 +4,13 @@ import order_routes from './handlers/orders';
 import user_routes from './handlers/users';
 import product_routes from './handlers/products';
 import dashboard_routes from './handlers/dashboard';
+import cors from 'cors';
 
 const app: express.Application = express();
 const address: string = '0.0.0.0:3000';
 
+// http://expressjs.com/en/resources/middleware/cors.html
+app.use(cors());
 app.use(bodyParser.json());
 
 app.get('/', function (req: Request, res: Response) {

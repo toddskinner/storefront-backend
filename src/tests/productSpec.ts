@@ -3,6 +3,30 @@ import { Product, ProductStore } from '../models/product';
 const store = new ProductStore();
 
 describe('Product Model', () => {
+  beforeAll(async function () {
+    const result1 = await store.create({
+      name: 'Nike Sweatshirt',
+      price: 28,
+      category: 'apparel',
+    });
+    const result2 = await store.create({
+      name: 'iPad',
+      price: 999,
+      category: 'electronics',
+    });
+    const result3 = await store.create({
+      name: 'Adidas Soccer Jersey',
+      price: 79,
+      category: 'apparel',
+    });
+    const result4 = await store.create({
+      name: 'Sapiens',
+      price: 19,
+      category: 'books',
+    });
+  });
+  
+  
   it('should have an index method', () => {
     expect(store.index).toBeDefined();
   });
@@ -19,21 +43,21 @@ describe('Product Model', () => {
   //   expect(store.update).toBeDefined();
   // });
 
-  it('should have a delete method', () => {
-    expect(store.delete).toBeDefined();
-  });
+  // it('should have a delete method', () => {
+  //   expect(store.delete).toBeDefined();
+  // });
 
   it('create method should add a product', async () => {
     const result = await store.create({
       name: 'Airpod Headphones',
       price: 249,
-      category: 2,
+      category: 'electronics',
     });
     expect(result).toEqual({
-      id: 1,
+      id: 5,
       name: 'Airpod Headphones',
       price: 249,
-      category: 2,
+      category: 'electronics',
     });
   });
 
@@ -42,27 +66,69 @@ describe('Product Model', () => {
     expect(result).toEqual([
       {
         id: 1,
+        name: 'Nike Sweatshirt',
+        price: 28,
+        category: 'apparel',
+      },
+      {
+        id: 2,
+        name: 'iPad',
+        price: 999,
+        category: 'electronics',
+      },
+      {
+        id: 3,
+        name: 'Adidas Soccer Jersey',
+        price: 79,
+        category: 'apparel',
+      },
+      {
+        id: 4,
+        name: 'Sapiens',
+        price: 19,
+        category: 'books',
+      },
+      {
+        id: 5,
         name: 'Airpod Headphones',
         price: 249,
-        category: 2,
+        category: 'electronics',
       },
     ]);
   });
 
   it('show method should return the correct product', async () => {
-    const result = await store.show('1');
+    const result = await store.show('5');
     expect(result).toEqual({
-      id: 1,
+      id: 5,
       name: 'Airpod Headphones',
       price: 249,
-      category: 2,
+      category: 'electronics',
     });
   });
 
-  it('delete method should remove the product', async () => {
-    store.delete('1');
-    const result = await store.index();
-
-    expect(result).toEqual([]);
+  it('productsByCategory method should return a list of only products in that category', async () => {
+    const result = await store.productsByCategory('apparel');
+    expect(result).toEqual([
+      {
+        id: 1,
+        name: 'Nike Sweatshirt',
+        price: 28,
+        category: 'apparel',
+      },
+      {
+        id: 3,
+        name: 'Adidas Soccer Jersey',
+        price: 79,
+        category: 'apparel',
+      }
+    ]);
   });
+
+  // it('delete method should remove the product', async () => {
+  //   store.delete('1');
+  //   const result = await store.index();
+
+  //   expect(result).toEqual([]);
+  // });
 });

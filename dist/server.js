@@ -9,8 +9,11 @@ const orders_1 = __importDefault(require("./handlers/orders"));
 const users_1 = __importDefault(require("./handlers/users"));
 const products_1 = __importDefault(require("./handlers/products"));
 const dashboard_1 = __importDefault(require("./handlers/dashboard"));
+const cors_1 = __importDefault(require("cors"));
 const app = express_1.default();
 const address = '0.0.0.0:3000';
+// http://expressjs.com/en/resources/middleware/cors.html
+app.use(cors_1.default());
 app.use(body_parser_1.default.json());
 app.get('/', function (req, res) {
     res.send('Hello World!');

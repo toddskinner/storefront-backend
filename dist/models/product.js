@@ -44,17 +44,17 @@ class ProductStore {
             throw new Error(`Could not add new product ${p.name}. Error: ${err}`);
         }
     }
-    async delete(id) {
+    async productsByCategory(category) {
         try {
-            const sql = 'DELETE FROM products WHERE id=($1)';
+            //@ts-ignore
             const conn = await database_1.default.connect();
-            const result = await conn.query(sql, [id]);
-            const product = result.rows[0];
+            const sql = 'SELECT * FROM products WHERE category=($1)';
+            const result = await conn.query(sql, [category]);
             conn.release();
-            return product;
+            return result.rows;
         }
         catch (err) {
-            throw new Error(`Could not delete product ${id}. Error: ${err}`);
+            throw new Error(`unable get products by category: ${err}`);
         }
     }
 }

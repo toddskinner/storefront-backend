@@ -48,5 +48,19 @@ class DashboardQueries {
             throw new Error(`unable get products by price: ${err}`);
         }
     }
+    // Get the five most expensive products
+    async fiveMostPopular() {
+        try {
+            //@ts-ignore
+            const conn = await database_1.default.connect();
+            const sql = 'SELECT name, price FROM products ORDER BY price DESC LIMIT 5';
+            const result = await conn.query(sql);
+            conn.release();
+            return result.rows;
+        }
+        catch (err) {
+            throw new Error(`unable get products by price: ${err}`);
+        }
+    }
 }
 exports.DashboardQueries = DashboardQueries;

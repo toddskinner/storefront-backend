@@ -4,7 +4,7 @@ export type Product = {
   id?: number | string;
   name: string;
   price: number;
-  category: number;
+  category: string;
 };
 
 export class ProductStore {
@@ -55,21 +55,37 @@ export class ProductStore {
     }
   }
 
-  async delete(id: string): Promise<Product> {
+  async productsByCategory(category: string): Promise<Product[]> {
     try {
-      const sql = 'DELETE FROM products WHERE id=($1)';
-
+      //@ts-ignore
       const conn = await Client.connect();
+      const sql = 'SELECT * FROM products WHERE category=($1)';
 
-      const result = await conn.query(sql, [id]);
-
-      const product = result.rows[0];
+      const result = await conn.query(sql, [category]);
 
       conn.release();
 
-      return product;
+      return result.rows;
     } catch (err) {
-      throw new Error(`Could not delete product ${id}. Error: ${err}`);
+      throw new Error(`unable get products by category: ${err}`);
     }
   }
+
+  // async delete(id: string): Promise<Product> {
+  //   try {
+  //     const sql = 'DELETE FROM products WHERE id=($1)';
+
+  //     const conn = await Client.connect();
+
+  //     const result = await conn.query(sql, [id]);
+
+  //     const product = result.rows[0];
+
+  //     conn.release();
+
+  //     return product;
+  //   } catch (err) {
+  //     throw new Error(`Could not delete product ${id}. Error: ${err}`);
+  //   }
+  // }
 }
