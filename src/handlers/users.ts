@@ -55,12 +55,30 @@ const create = async (req: Request, res: Response) => {
   }
 };
 
+const authenticate = async (req: Request, res: Response) => {
+  // const user: User = {
+  //   username: _req.body.username,
+  //   firstname: _req.body.firstname,
+  //   lastname: _req.body.lastname,
+  //   password: _req.body.password,
+  // };
+  try {
+    // let password:string = user.password!;
+    const u = await store.authenticate(req.body.username, req.body.password);
+    var token = jwt.sign({ user: u }, process.env.TOKEN_SECRET as string);
+    res.json(token);
+  } catch (err) {
+    res.status(401);
+    res.json(err + req.body.username);
+  }
+};
+
 const user_routes = (app: express.Application) => {
   app.get('/users', verifyToken, index);
   app.get(`/users/{:id}`, verifyToken, show);
   app.post('/users', create);
+  app.post('/users/authenticate', authenticate);
   // app.delete(`/users/{:id}`, destroy);
-  // app.post('/users/authenticate', authenticate);
 };
 
 export default user_routes;
@@ -91,23 +109,7 @@ export default user_routes;
 //   }
 // };
 
-// const authenticate = async (_req: Request, res: Response) => {
-//   const user: User = {
-//     username: _req.body.username,
-//     firstname: _req.body.firstname,
-//     lastname: _req.body.lastname,
-//     password: _req.body.password,
-//   };
-//   try {
-//     // let password:string = user.password!;
-//     const u = await store.authenticate(user.username, user.password);
-//     var token = jwt.sign({ user: u }, process.env.TOKEN_SECRET as string);
-//     res.json(token);
-//   } catch (err) {
-//     res.status(401);
-//     res.json(err + user);
-//   }
-// };
+
 
 // const update = async (req: Request, res: Response) => {
 //   const user: User = {
