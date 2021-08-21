@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import order_routes from './handlers/orders';
 import user_routes from './handlers/users';
 import product_routes from './handlers/products';
-import dashboard_routes from './handlers/dashboard';
+// import dashboard_routes from './handlers/dashboard';
 import cors from 'cors';
 
 const app: express.Application = express();
@@ -20,7 +20,7 @@ app.get('/', function (req: Request, res: Response) {
 order_routes(app);
 user_routes(app);
 product_routes(app);
-dashboard_routes(app);
+// dashboard_routes(app);
 
 app.listen(3000, function () {
   console.log(`starting app on: ${address}`);

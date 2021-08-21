@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const product_1 = require("../models/product");
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const verifyToken_1 = __importDefault(require("./../middleware/verifyToken"));
 const store = new product_1.ProductStore();
 const index = async (_req, res) => {
     const products = await store.index();
@@ -19,16 +19,15 @@ const productsByCategory = async (req, res) => {
     res.json(products);
 };
 const create = async (req, res) => {
-    try {
-        const authorizationHeader = req.headers.authorization;
-        const token = authorizationHeader.split(' ')[1];
-        jsonwebtoken_1.default.verify(token, process.env.TOKEN_SECRET);
-    }
-    catch (err) {
-        res.status(401);
-        res.json('Access denied, invalid token');
-        return;
-    }
+    // try {
+    //   const authorizationHeader = req.headers.authorization!;
+    //   const token = authorizationHeader.split(' ')[1];
+    //   jwt.verify(token, process.env.TOKEN_SECRET!);
+    // } catch (err) {
+    //   res.status(401);
+    //   res.json('Access denied, invalid token');
+    //   return;
+    // }
     try {
         const product = {
             name: req.body.name,
@@ -43,6 +42,14 @@ const create = async (req, res) => {
         res.json(err);
     }
 };
+const product_routes = (app) => {
+    app.get('/products', index);
+    app.get('/products/{:id}', show);
+    app.post('/products', verifyToken_1.default, create);
+    app.get('/products/{:category}', productsByCategory);
+    // app.delete('/products/{:id}', destroy);
+};
+exports.default = product_routes;
 // const destroy = async (req: Request, res: Response) => {
 //   try {
 //     const authorizationHeader = req.headers.authorization!;
@@ -61,11 +68,3 @@ const create = async (req, res) => {
 //     res.json({ error });
 //   }
 // };
-const product_routes = (app) => {
-    app.get('/products', index);
-    app.get('/products/{:id}', show);
-    app.post('/products', create);
-    app.get('/products/{:category}', productsByCategory);
-    // app.delete('/products/{:id}', destroy);
-};
-exports.default = product_routes;

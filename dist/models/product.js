@@ -57,5 +57,18 @@ class ProductStore {
             throw new Error(`unable get products by category: ${err}`);
         }
     }
+    async delete(id) {
+        try {
+            const sql = 'DELETE FROM products WHERE id=($1)';
+            const conn = await database_1.default.connect();
+            const result = await conn.query(sql, [id]);
+            const product = result.rows[0];
+            conn.release();
+            return product;
+        }
+        catch (err) {
+            throw new Error(`Could not delete product ${id}. Error: ${err}`);
+        }
+    }
 }
 exports.ProductStore = ProductStore;

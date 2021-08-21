@@ -1,34 +1,35 @@
 import express, { Request, Response } from 'express';
 import { User, UserStore } from '../models/user';
 import jwt from 'jsonwebtoken';
+import verifyToken from './../middleware/verifyToken';
 
 const store = new UserStore();
 
 const index = async (req: Request, res: Response) => {
-  try {
-    const authorizationHeader = req.headers.authorization!;
-    const token = authorizationHeader.split(' ')[1];
-    jwt.verify(token, process.env.TOKEN_SECRET!);
-  } catch (err) {
-    res.status(401);
-    res.json('Access denied, invalid token');
-    return;
-  }
+  // try {
+  //   const authorizationHeader = req.headers.authorization!;
+  //   const token = authorizationHeader.split(' ')[1];
+  //   jwt.verify(token, process.env.TOKEN_SECRET!);
+  // } catch (err) {
+  //   res.status(401);
+  //   res.json('Access denied, invalid token');
+  //   return;
+  // }
 
   const users = await store.index();
   res.json(users);
 };
 
 const show = async (req: Request, res: Response) => {
-  try {
-    const authorizationHeader = req.headers.authorization!;
-    const token = authorizationHeader.split(' ')[1];
-    jwt.verify(token, process.env.TOKEN_SECRET!);
-  } catch (err) {
-    res.status(401);
-    res.json('Access denied, invalid token');
-    return;
-  }
+  // try {
+  //   const authorizationHeader = req.headers.authorization!;
+  //   const token = authorizationHeader.split(' ')[1];
+  //   jwt.verify(token, process.env.TOKEN_SECRET!);
+  // } catch (err) {
+  //   res.status(401);
+  //   res.json('Access denied, invalid token');
+  //   return;
+  // }
 
   const user = await store.show(req.body.id);
   res.json(user);
@@ -45,16 +46,6 @@ const create = async (req: Request, res: Response) => {
   };
 
   try {
-    const authorizationHeader = req.headers.authorization!;
-    const token = authorizationHeader.split(' ')[1];
-    jwt.verify(token, process.env.TOKEN_SECRET!);
-  } catch (err) {
-    res.status(401);
-    res.json('Access denied, invalid token');
-    return;
-  }
-
-  try {
     const newUser = await store.create(user);
     var token = jwt.sign({ user: newUser }, process.env.TOKEN_SECRET!);
     res.json(token);
@@ -63,6 +54,17 @@ const create = async (req: Request, res: Response) => {
     res.json(err + user);
   }
 };
+
+const user_routes = (app: express.Application) => {
+  app.get('/users', verifyToken, index);
+  app.get(`/users/{:id}`, verifyToken, show);
+  app.post('/users', create);
+  // app.delete(`/users/{:id}`, destroy);
+  // app.post('/users/authenticate', authenticate);
+};
+
+export default user_routes;
+
 
 // const destroy = async (req: Request, res: Response) => {
 //   const deleted = await store.delete(req.body.id);
@@ -138,12 +140,4 @@ const create = async (req: Request, res: Response) => {
 //   }
 // };
 
-const user_routes = (app: express.Application) => {
-  app.get('/users', index);
-  app.get(`/users/{:id}`, show);
-  app.post('/users', create);
-  // app.delete(`/users/{:id}`, destroy);
-  // app.post('/users/authenticate', authenticate);
-};
 
-export default user_routes;

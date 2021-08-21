@@ -45,30 +45,31 @@ class OrderStore {
             throw new Error(`Could not create order ${o.id}. Error: ${err}`);
         }
     }
-    async addProduct(quantity, order_id, product_id) {
-        // get order to see if it is open
+    async addProduct(order_id, product_id, quantity) {
+        // get order to see if it is active 
+        // try {
+        //   const ordersql = 'SELECT * FROM orders WHERE id=($1)';
+        //   //@ts-ignore
+        //   const conn = await Client.connect();
+        //   const result = await conn.query(ordersql, [order_id]);
+        //   const order = result.rows[0];
+        //   if (order.status !== 'active') {
+        //     throw new Error(
+        //       `Could not add product ${product_id} to order ${order_id} because order status is ${order.status}`
+        //     );
+        //   }
+        //   conn.release();
+        // } catch (err) {
+        //   throw new Error(`${err}`);
+        // }
         try {
-            const ordersql = 'SELECT * FROM orders WHERE id=($1)';
+            const sql = 'INSERT INTO order_products (order_id, product_id, quantity) VALUES($1, $2, $3) RETURNING *';
             //@ts-ignore
             const conn = await database_1.default.connect();
-            const result = await conn.query(ordersql, [order_id]);
-            const order = result.rows[0];
-            if (order.status !== 'open') {
-                throw new Error(`Could not add product ${product_id} to order ${order_id} because order status is ${order.status}`);
-            }
+            const result = await conn.query(sql, [order_id, product_id, quantity]);
+            const addedProduct = result.rows[0];
             conn.release();
-        }
-        catch (err) {
-            throw new Error(`${err}`);
-        }
-        try {
-            const sql = 'INSERT INTO order_products (quantity, order_id, product_id) VALUES($1, $2, $3) RETURNING *';
-            //@ts-ignore
-            const conn = await database_1.default.connect();
-            const result = await conn.query(sql, [quantity, order_id, product_id]);
-            const order = result.rows[0];
-            conn.release();
-            return order;
+            return addedProduct;
         }
         catch (err) {
             throw new Error(`Could not add product ${product_id} to order ${order_id}: ${err}`);
@@ -77,6 +78,33 @@ class OrderStore {
     async delete(id) {
         try {
             const sql = 'DELETE FROM orders WHERE id=($1)';
+            // @ts-ignore
+            const conn = await database_1.default.connect();
+            const result = await conn.query(sql, [id]);
+            const order = result.rows[0];
+            conn.release();
+            return order;
+        }
+        catch (err) {
+            throw new Error(`Could not delete order ${id}. Error: ${err}`);
+        }
+    }
+    async getCurrentOrderAndProducts(user_id) {
+        try {
+            //@ts-ignore
+            const conn = await database_1.default.connect();
+            const sql = 'SELECT order_id, status, user_id, name, product_id, quantity, price FROM order_products INNER JOIN products ON order_products.product_id = products.id INNER JOIN orders ON order_products.order_id = orders.id WHERE orders.user_id=($1) AND orders.status=($2)';
+            const result = await conn.query(sql, [user_id, 'active']);
+            conn.release();
+            return result.rows;
+        }
+        catch (err) {
+            throw new Error(`unable get products and orders: ${err}`);
+        }
+    }
+    async removeProductFromOrder(id) {
+        try {
+            const sql = 'DELETE FROM order_products WHERE id=($1)';
             // @ts-ignore
             const conn = await database_1.default.connect();
             const result = await conn.query(sql, [id]);

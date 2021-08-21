@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { Product, ProductStore } from '../models/product';
 import jwt from 'jsonwebtoken';
+import verifyToken from './../middleware/verifyToken';
 
 const store = new ProductStore();
 
@@ -20,15 +21,15 @@ const productsByCategory = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  try {
-    const authorizationHeader = req.headers.authorization!;
-    const token = authorizationHeader.split(' ')[1];
-    jwt.verify(token, process.env.TOKEN_SECRET!);
-  } catch (err) {
-    res.status(401);
-    res.json('Access denied, invalid token');
-    return;
-  }
+  // try {
+  //   const authorizationHeader = req.headers.authorization!;
+  //   const token = authorizationHeader.split(' ')[1];
+  //   jwt.verify(token, process.env.TOKEN_SECRET!);
+  // } catch (err) {
+  //   res.status(401);
+  //   res.json('Access denied, invalid token');
+  //   return;
+  // }
 
   try {
     const product: Product = {
@@ -43,6 +44,16 @@ const create = async (req: Request, res: Response) => {
     res.json(err);
   }
 };
+
+const product_routes = (app: express.Application) => {
+  app.get('/products', index);
+  app.get('/products/{:id}', show);
+  app.post('/products', verifyToken, create);
+  app.get('/products/{:category}', productsByCategory);
+  // app.delete('/products/{:id}', destroy);
+};
+
+export default product_routes;
 
 // const destroy = async (req: Request, res: Response) => {
 //   try {
@@ -64,12 +75,4 @@ const create = async (req: Request, res: Response) => {
 //   }
 // };
 
-const product_routes = (app: express.Application) => {
-  app.get('/products', index);
-  app.get('/products/{:id}', show);
-  app.post('/products', create);
-  app.get('/products/{:category}', productsByCategory);
-  // app.delete('/products/{:id}', destroy);
-};
 
-export default product_routes;
