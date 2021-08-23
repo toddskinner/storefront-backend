@@ -8,10 +8,10 @@ This repo contains a basic Node and Express app to get you started in constructi
 
 In psql run the following to create the dev and test database:
 ```bash
-CREATE DATABASE storefront;
+CREATE DATABASE storefront
 ```
 ```bash
-CREATE DATABASE storefront_test;
+CREATE DATABASE storefront_test
 ```
 
 ## Migrate DBs
