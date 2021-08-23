@@ -43,26 +43,13 @@ class UserStore {
             throw new Error(`unable to create user (${u.username}): ${err}`);
         }
     }
-    async authenticate(username, password) {
-        const conn = await database_1.default.connect();
-        const sql = 'SELECT password FROM users WHERE username=($1)';
-        const result = await conn.query(sql, [username]);
-        console.log(password + pepper);
-        if (result.rows.length) {
-            const user = result.rows[0];
-            console.log(user);
-            if (bcrypt_1.default.compareSync(password + pepper, user.password)) {
-                return user;
-            }
-        }
-        return null;
-    }
     async show(id) {
         try {
             const sql = 'SELECT * FROM users WHERE id=($1)';
             //@ts-ignoreX$
             const conn = await database_1.default.connect();
             const result = await conn.query(sql, [id]);
+            console.log('show result: ' + result);
             conn.release();
             return result.rows[0];
         }

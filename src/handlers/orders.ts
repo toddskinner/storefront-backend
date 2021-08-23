@@ -11,7 +11,7 @@ const index = async (_req: Request, res: Response) => {
 };
 
 const show = async (req: Request, res: Response) => {
-  const order = await store.show(req.body.id);
+  const order = await store.show(req.params.id);
   res.json(order);
 };
 
@@ -57,27 +57,17 @@ const addProduct = async (req: Request, res: Response) => {
   }
 
   try {
-    const addedProduct = await store.addProduct(order_id, product_id, quantity)
-    res.json(addedProduct)
-  } catch(err) {
-    res.status(400)
-    res.json(err)
+    const addedProduct = await store.addProduct(order_id, product_id, quantity);
+    res.json(addedProduct);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
   }
 };
 
 const currentOrderAndProducts = async (req: Request, res: Response) => {
-  // try {
-  //   const authorizationHeader = req.headers.authorization!;
-  //   const token = authorizationHeader.split(' ')[1];
-  //   jwt.verify(token, process.env.TOKEN_SECRET!);
-  // } catch (err) {
-  //   res.status(401);
-  //   res.json('Access denied, invalid token');
-  //   return;
-  // }
-
   try {
-    const newOrder = await store.getCurrentOrderAndProducts(req.body.user_id);
+    const newOrder = await store.getCurrentOrderAndProducts(req.params.user_id);
     res.json(newOrder);
   } catch (err) {
     res.status(400);
@@ -106,7 +96,7 @@ const destroy = async (req: Request, res: Response) => {
 };
 
 const order_routes = (app: express.Application) => {
-  app.get('/orders/current/{:user_id}', verifyToken, currentOrderAndProducts);
+  app.get('/orders/current/:user_id', verifyToken, currentOrderAndProducts);
 };
 
 export default order_routes;

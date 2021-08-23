@@ -33,4 +33,7 @@ if (ENV === 'test') {
   });
 }
 
+console.log(ENV === 'dev');
+console.log(client);
+
 export default client;

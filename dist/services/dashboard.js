@@ -7,12 +7,12 @@
 //     try {
 //       //@ts-ignore
 //       const conn = await Client.connect();
-//       const sql = 
-//         'SELECT order_id, status, user_id, name, product_id, quantity, price FROM order_products INNER JOIN products ON order_products.product_id = products.id INNER JOIN orders ON order_products.order_id = orders.id WHERE orders.user_id=($1) AND orders.status=($2)';  
+//       const sql =
+//         'SELECT order_id, status, user_id, name, product_id, quantity, price FROM order_products INNER JOIN products ON order_products.product_id = products.id INNER JOIN orders ON order_products.order_id = orders.id WHERE orders.user_id=($1) AND orders.status=($2)';
 //       const result = await conn.query(sql, [user_id, 'active']);
 //       conn.release();
 //       return result.rows;
-//     } catch (err) { 
+//     } catch (err) {
 //       throw new Error(`unable get products and orders: ${err}`);
 //     }
 //   }
@@ -69,7 +69,7 @@
 // //       const sql =
 // //         // 'SELECT name, price, order_id FROM products INNER JOIN order_products ON product.id = order_products.id';
 // //         // 'SELECT name, price, product_id FROM products INNER JOIN order_products ON order.id = order_products.order_id'
-// //         'SELECT product.name, product.price, quantity, order.status, order.user_id, order_id, product_id FROM order_products INNER JOIN products ON order_products.product_id = product.id INNER JOIN orders ON order_products.order_id = order.id WHERE order.user_id=($1)';  
+// //         'SELECT product.name, product.price, quantity, order.status, order.user_id, order_id, product_id FROM order_products INNER JOIN products ON order_products.product_id = product.id INNER JOIN orders ON order_products.order_id = order.id WHERE order.user_id=($1)';
 // //       const result = await conn.query(sql);
 // //       conn.release();
 // //       return result.rows;

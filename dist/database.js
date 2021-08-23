@@ -25,4 +25,6 @@ if (ENV === 'test') {
         password: POSTGRES_PASSWORD,
     });
 }
+console.log(ENV === 'dev');
+console.log(client);
 exports.default = client;

@@ -46,7 +46,7 @@ class OrderStore {
         }
     }
     async addProduct(order_id, product_id, quantity) {
-        // get order to see if it is active 
+        // get order to see if it is active
         // try {
         //   const ordersql = 'SELECT * FROM orders WHERE id=($1)';
         //   //@ts-ignore

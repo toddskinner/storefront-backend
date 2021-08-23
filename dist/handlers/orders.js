@@ -12,7 +12,7 @@ const index = async (_req, res) => {
     res.json(orders);
 };
 const show = async (req, res) => {
-    const order = await store.show(req.body.id);
+    const order = await store.show(req.params.id);
     res.json(order);
 };
 const create = async (req, res) => {
@@ -64,17 +64,8 @@ const addProduct = async (req, res) => {
     }
 };
 const currentOrderAndProducts = async (req, res) => {
-    // try {
-    //   const authorizationHeader = req.headers.authorization!;
-    //   const token = authorizationHeader.split(' ')[1];
-    //   jwt.verify(token, process.env.TOKEN_SECRET!);
-    // } catch (err) {
-    //   res.status(401);
-    //   res.json('Access denied, invalid token');
-    //   return;
-    // }
     try {
-        const newOrder = await store.getCurrentOrderAndProducts(req.body.user_id);
+        const newOrder = await store.getCurrentOrderAndProducts(req.params.user_id);
         res.json(newOrder);
     }
     catch (err) {
@@ -103,6 +94,6 @@ const destroy = async (req, res) => {
     }
 };
 const order_routes = (app) => {
-    app.get('/orders/current/{:user_id}', verifyToken_1.default, currentOrderAndProducts);
+    app.get('/orders/current/:user_id', verifyToken_1.default, currentOrderAndProducts);
 };
 exports.default = order_routes;

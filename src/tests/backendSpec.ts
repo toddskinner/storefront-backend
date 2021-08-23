@@ -65,19 +65,18 @@ describe('All Backend Models', () => {
   });
 
   describe('User Model', () => {
-    
     it('should have an index method', () => {
       expect(userStore.index).toBeDefined();
     });
-  
+
     it('should have a show method', () => {
       expect(userStore.show).toBeDefined();
     });
-  
+
     it('should have a create method', () => {
       expect(userStore.create).toBeDefined();
     });
-  
+
     it('create method should add a user', async () => {
       const result = await userStore.create({
         username: 'draymondgreen23',
@@ -91,7 +90,7 @@ describe('All Backend Models', () => {
       expect(result.firstname).toEqual('Draymond');
       expect(result.lastname).toEqual('Green');
     });
-  
+
     it('index method should return a list of users', async () => {
       const result = await userStore.index();
       // expected to equal 2 b/c already added and deleted an entry during order tests
@@ -108,7 +107,7 @@ describe('All Backend Models', () => {
       expect(result[2].firstname).toEqual('Draymond');
       expect(result[2].lastname).toEqual('Green');
     });
-  
+
     it('show method should return the correct user', async () => {
       const result = await userStore.show('1');
       expect(result.id).toEqual(1);
@@ -116,35 +115,34 @@ describe('All Backend Models', () => {
       expect(result.firstname).toEqual('Steph');
       expect(result.lastname).toEqual('Curry');
     });
-  
+
     // it('delete method should remove the user', async () => {
     //   userStore.delete('1');
     //   userStore.delete('2');
     //   userStore.delete('3');
     //   const result = await userStore.index();
-  
+
     //   expect(result).toEqual([]);
     // });
   });
-  
+
   describe('Product Model', () => {
-    
     it('should have an index method', () => {
       expect(productStore.index).toBeDefined();
     });
-  
+
     it('should have a show method', () => {
       expect(productStore.show).toBeDefined();
     });
-  
+
     it('should have a create method', () => {
       expect(productStore.create).toBeDefined();
     });
-  
+
     it('should have a delete method', () => {
       expect(productStore.delete).toBeDefined();
     });
-  
+
     it('create method should add a product', async () => {
       const result = await productStore.create({
         name: 'Toothpaste',
@@ -158,7 +156,7 @@ describe('All Backend Models', () => {
         category: 'toiletries',
       });
     });
-  
+
     it('index method should return a list of products', async () => {
       const result = await productStore.index();
       expect(result).toEqual([
@@ -200,7 +198,7 @@ describe('All Backend Models', () => {
         },
       ]);
     });
-  
+
     it('show method should return the correct product', async () => {
       const result = await productStore.show('5');
       expect(result).toEqual({
@@ -210,7 +208,7 @@ describe('All Backend Models', () => {
         category: 'electronics',
       });
     });
-  
+
     it('productsByCategory method should return a list of only products in that category', async () => {
       const result = await productStore.productsByCategory('apparel');
       expect(result).toEqual([
@@ -225,29 +223,28 @@ describe('All Backend Models', () => {
           name: 'Adidas Soccer Jersey',
           price: 79,
           category: 'apparel',
-        }
+        },
       ]);
     });
   });
 
   describe('Order Model', () => {
-  
     it('should have an index method', () => {
       expect(orderStore.index).toBeDefined();
     });
-  
+
     it('should have a show method', () => {
       expect(orderStore.show).toBeDefined();
     });
-  
+
     it('should have a create method', () => {
       expect(orderStore.create).toBeDefined();
     });
-  
+
     it('should have a delete method', () => {
       expect(orderStore.delete).toBeDefined();
     });
-  
+
     it('create method should add an order', async () => {
       const result = await orderStore.create({
         status: 'complete',
@@ -261,15 +258,15 @@ describe('All Backend Models', () => {
     });
 
     it('addProduct method should add products to an order', async () => {
-        const result = await orderStore.addProduct('3', '2', 5);
-        expect(result).toEqual({
-            id: 6,
-            order_id: '3',
-            product_id: '2',
-            quantity: 5,
-        });
+      const result = await orderStore.addProduct('3', '2', 5);
+      expect(result).toEqual({
+        id: 6,
+        order_id: '3',
+        product_id: '2',
+        quantity: 5,
       });
-  
+    });
+
     it('index method should return a list of orders', async () => {
       const result = await orderStore.index();
       expect(result).toEqual([
@@ -295,7 +292,7 @@ describe('All Backend Models', () => {
         },
       ]);
     });
-  
+
     it('show method should return the correct order', async () => {
       const result = await orderStore.show('2');
       expect(result).toEqual({
@@ -304,51 +301,51 @@ describe('All Backend Models', () => {
         user_id: '1',
       });
     });
-  
-    it('getCurrentOrderAndProducts method should return the products in User 1\'s current (\'active\') order', async () => {
+
+    it("getCurrentOrderAndProducts method should return the products in User 1's current ('active') order", async () => {
       const result = await orderStore.getCurrentOrderAndProducts('1');
       expect(result).toEqual([
         {
-          order_id: '1', 
-          status: 'active', 
-          user_id: '1', 
+          order_id: '1',
+          status: 'active',
+          user_id: '1',
           name: 'Adidas Soccer Jersey',
-          product_id: '3', 
-          quantity: 4, 
+          product_id: '3',
+          quantity: 4,
           price: 79,
         },
         {
-          order_id: '1', 
-          status: 'active', 
-          user_id: '1', 
+          order_id: '1',
+          status: 'active',
+          user_id: '1',
           name: 'Airpod Headphones',
-          product_id: '5', 
-          quantity: 5, 
+          product_id: '5',
+          quantity: 5,
           price: 249,
-        }
+        },
       ]);
     });
   });
 
-// Not needed b/c down migration will be run after all tests pass  
-//   afterAll(async function () {
-//     orderStore.removeProductFromOrder('1');
-//     orderStore.removeProductFromOrder('2');
-//     orderStore.removeProductFromOrder('3');
-//     orderStore.removeProductFromOrder('4');
-//     orderStore.removeProductFromOrder('5');
-//     orderStore.delete('1');
-//     orderStore.delete('2');
-//     orderStore.delete('3');
-//     orderStore.delete('4');
-//     productStore.delete('1');
-//     productStore.delete('2');
-//     productStore.delete('3');
-//     productStore.delete('4');
-//     productStore.delete('5');
-//     productStore.delete('6');
-//     userStore.delete('1');
-//     userStore.delete('2');
-//     userStore.delete('3');
-//   });
+  // Not needed b/c down migration will be run after all tests pass
+  //   afterAll(async function () {
+  //     orderStore.removeProductFromOrder('1');
+  //     orderStore.removeProductFromOrder('2');
+  //     orderStore.removeProductFromOrder('3');
+  //     orderStore.removeProductFromOrder('4');
+  //     orderStore.removeProductFromOrder('5');
+  //     orderStore.delete('1');
+  //     orderStore.delete('2');
+  //     orderStore.delete('3');
+  //     orderStore.delete('4');
+  //     productStore.delete('1');
+  //     productStore.delete('2');
+  //     productStore.delete('3');
+  //     productStore.delete('4');
+  //     productStore.delete('5');
+  //     productStore.delete('6');
+  //     userStore.delete('1');
+  //     userStore.delete('2');
+  //     userStore.delete('3');
+  //   });
 });

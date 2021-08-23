@@ -20,7 +20,7 @@
 //       res.json('Access denied, invalid token');
 //       return;
 //     }
-  
+
 //     try {
 //       const newOrder = await dashboard.getCurrentOrderAndProducts(req.body.user_id);
 //       res.json(newOrder);

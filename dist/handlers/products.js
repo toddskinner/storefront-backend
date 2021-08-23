@@ -6,28 +6,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const product_1 = require("../models/product");
 const verifyToken_1 = __importDefault(require("./../middleware/verifyToken"));
 const store = new product_1.ProductStore();
-const index = async (_req, res) => {
+const index = async (req, res) => {
     const products = await store.index();
     res.json(products);
 };
 const show = async (req, res) => {
-    const product = await store.show(req.body.id);
+    const product = await store.show(req.params.id);
     res.json(product);
 };
 const productsByCategory = async (req, res) => {
-    const products = await store.productsByCategory(req.body.category);
+    const category = req.params.category;
+    console.log('category: ' + category);
+    const products = await store.productsByCategory(category);
     res.json(products);
 };
 const create = async (req, res) => {
-    // try {
-    //   const authorizationHeader = req.headers.authorization!;
-    //   const token = authorizationHeader.split(' ')[1];
-    //   jwt.verify(token, process.env.TOKEN_SECRET!);
-    // } catch (err) {
-    //   res.status(401);
-    //   res.json('Access denied, invalid token');
-    //   return;
-    // }
     try {
         const product = {
             name: req.body.name,
@@ -44,10 +37,10 @@ const create = async (req, res) => {
 };
 const product_routes = (app) => {
     app.get('/products', index);
-    app.get('/products/{:id}', show);
+    app.get('/products/:id', show);
     app.post('/products', verifyToken_1.default, create);
-    app.get('/products/{:category}', productsByCategory);
-    // app.delete('/products/{:id}', destroy);
+    app.get('/products/category/:category', productsByCategory);
+    // app.delete('/products/delete/:id', destroy);
 };
 exports.default = product_routes;
 // const destroy = async (req: Request, res: Response) => {

@@ -6,32 +6,12 @@ import verifyToken from './../middleware/verifyToken';
 const store = new UserStore();
 
 const index = async (req: Request, res: Response) => {
-  // try {
-  //   const authorizationHeader = req.headers.authorization!;
-  //   const token = authorizationHeader.split(' ')[1];
-  //   jwt.verify(token, process.env.TOKEN_SECRET!);
-  // } catch (err) {
-  //   res.status(401);
-  //   res.json('Access denied, invalid token');
-  //   return;
-  // }
-
   const users = await store.index();
   res.json(users);
 };
 
 const show = async (req: Request, res: Response) => {
-  // try {
-  //   const authorizationHeader = req.headers.authorization!;
-  //   const token = authorizationHeader.split(' ')[1];
-  //   jwt.verify(token, process.env.TOKEN_SECRET!);
-  // } catch (err) {
-  //   res.status(401);
-  //   res.json('Access denied, invalid token');
-  //   return;
-  // }
-
-  const user = await store.show(req.body.id);
+  const user = await store.show(req.params.id);
   res.json(user);
 };
 
@@ -55,34 +35,14 @@ const create = async (req: Request, res: Response) => {
   }
 };
 
-const authenticate = async (req: Request, res: Response) => {
-  // const user: User = {
-  //   username: _req.body.username,
-  //   firstname: _req.body.firstname,
-  //   lastname: _req.body.lastname,
-  //   password: _req.body.password,
-  // };
-  try {
-    // let password:string = user.password!;
-    const u = await store.authenticate(req.body.username, req.body.password);
-    var token = jwt.sign({ user: u }, process.env.TOKEN_SECRET as string);
-    res.json(token);
-  } catch (err) {
-    res.status(401);
-    res.json(err + req.body.username);
-  }
-};
-
 const user_routes = (app: express.Application) => {
   app.get('/users', verifyToken, index);
-  app.get(`/users/{:id}`, verifyToken, show);
+  app.get(`/users/:id`, verifyToken, show);
   app.post('/users', create);
-  app.post('/users/authenticate', authenticate);
-  // app.delete(`/users/{:id}`, destroy);
+  // app.delete(`/users/delete/:id`, destroy);
 };
 
 export default user_routes;
-
 
 // const destroy = async (req: Request, res: Response) => {
 //   const deleted = await store.delete(req.body.id);
@@ -108,8 +68,6 @@ export default user_routes;
 //     res.json({ error });
 //   }
 // };
-
-
 
 // const update = async (req: Request, res: Response) => {
 //   const user: User = {
@@ -141,5 +99,3 @@ export default user_routes;
 //     res.json(err + user);
 //   }
 // };
-
-

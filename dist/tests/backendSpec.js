@@ -206,7 +206,7 @@ describe('All Backend Models', () => {
                     name: 'Adidas Soccer Jersey',
                     price: 79,
                     category: 'apparel',
-                }
+                },
             ]);
         });
     });
@@ -276,7 +276,7 @@ describe('All Backend Models', () => {
                 user_id: '1',
             });
         });
-        it('getCurrentOrderAndProducts method should return the products in User 1\'s current (\'active\') order', async () => {
+        it("getCurrentOrderAndProducts method should return the products in User 1's current ('active') order", async () => {
             const result = await orderStore.getCurrentOrderAndProducts('1');
             expect(result).toEqual([
                 {
@@ -296,11 +296,11 @@ describe('All Backend Models', () => {
                     product_id: '5',
                     quantity: 5,
                     price: 249,
-                }
+                },
             ]);
         });
     });
-    // Not needed b/c down migration will be run after all tests pass  
+    // Not needed b/c down migration will be run after all tests pass
     //   afterAll(async function () {
     //     orderStore.removeProductFromOrder('1');
     //     orderStore.removeProductFromOrder('2');

@@ -54,8 +54,17 @@ export class OrderStore {
     }
   }
 
-  async addProduct(order_id: string, product_id: string, quantity: number): Promise<{id: number; order_id: string; product_id: string; quantity: number;}> {
-    // get order to see if it is active 
+  async addProduct(
+    order_id: string,
+    product_id: string,
+    quantity: number
+  ): Promise<{
+    id: number;
+    order_id: string;
+    product_id: string;
+    quantity: number;
+  }> {
+    // get order to see if it is active
     // try {
     //   const ordersql = 'SELECT * FROM orders WHERE id=($1)';
     //   //@ts-ignore
@@ -114,19 +123,31 @@ export class OrderStore {
     }
   }
 
-  async getCurrentOrderAndProducts(user_id: string): Promise<{ order_id: string; status: string; user_id: string; name: string; product_id: string; quantity: number; price: number;}[]> {
+  async getCurrentOrderAndProducts(
+    user_id: string
+  ): Promise<
+    {
+      order_id: string;
+      status: string;
+      user_id: string;
+      name: string;
+      product_id: string;
+      quantity: number;
+      price: number;
+    }[]
+  > {
     try {
       //@ts-ignore
       const conn = await Client.connect();
-      const sql = 
-        'SELECT order_id, status, user_id, name, product_id, quantity, price FROM order_products INNER JOIN products ON order_products.product_id = products.id INNER JOIN orders ON order_products.order_id = orders.id WHERE orders.user_id=($1) AND orders.status=($2)';  
+      const sql =
+        'SELECT order_id, status, user_id, name, product_id, quantity, price FROM order_products INNER JOIN products ON order_products.product_id = products.id INNER JOIN orders ON order_products.order_id = orders.id WHERE orders.user_id=($1) AND orders.status=($2)';
 
       const result = await conn.query(sql, [user_id, 'active']);
 
       conn.release();
 
       return result.rows;
-    } catch (err) { 
+    } catch (err) {
       throw new Error(`unable get products and orders: ${err}`);
     }
   }
