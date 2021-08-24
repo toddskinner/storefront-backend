@@ -108,13 +108,11 @@ describe('All Backend Models', () => {
             expect(result.firstname).toEqual('Steph');
             expect(result.lastname).toEqual('Curry');
         });
-        // it('delete method should remove the user', async () => {
-        //   userStore.delete('1');
-        //   userStore.delete('2');
-        //   userStore.delete('3');
-        //   const result = await userStore.index();
-        //   expect(result).toEqual([]);
-        // });
+        it('delete method should remove the user', async () => {
+            const deleted = await userStore.delete('3');
+            const result = await userStore.index();
+            expect(result.length).toEqual(2);
+        });
     });
     describe('Product Model', () => {
         it('should have an index method', () => {
@@ -209,6 +207,11 @@ describe('All Backend Models', () => {
                 },
             ]);
         });
+        it('delete method should remove the product', async () => {
+            const deleted = await productStore.delete('6');
+            const result = await productStore.index();
+            expect(result.length).toEqual(5);
+        });
     });
     describe('Order Model', () => {
         it('should have an index method', () => {
@@ -242,6 +245,42 @@ describe('All Backend Models', () => {
                 product_id: '2',
                 quantity: 5,
             });
+        });
+        it('removeProductFromOrder method should remove products from an order', async () => {
+            const removed = await orderStore.removeProductFromOrder('3', '2');
+            const result = await orderStore.indexOrderProductsTable();
+            expect(result).toEqual([
+                {
+                    id: 1,
+                    quantity: 4,
+                    order_id: '1',
+                    product_id: '3',
+                },
+                {
+                    id: 2,
+                    quantity: 5,
+                    order_id: '1',
+                    product_id: '5',
+                },
+                {
+                    id: 3,
+                    quantity: 10,
+                    order_id: '2',
+                    product_id: '2',
+                },
+                {
+                    id: 4,
+                    quantity: 7,
+                    order_id: '2',
+                    product_id: '4',
+                },
+                {
+                    id: 5,
+                    quantity: 20,
+                    order_id: '3',
+                    product_id: '1',
+                }
+            ]);
         });
         it('index method should return a list of orders', async () => {
             const result = await orderStore.index();
@@ -299,26 +338,26 @@ describe('All Backend Models', () => {
                 },
             ]);
         });
+        it('delete method should remove the order', async () => {
+            const deleted = await orderStore.delete('4');
+            const result = await orderStore.index();
+            expect(result).toEqual([
+                {
+                    id: 1,
+                    status: 'active',
+                    user_id: '1',
+                },
+                {
+                    id: 2,
+                    status: 'complete',
+                    user_id: '1',
+                },
+                {
+                    id: 3,
+                    status: 'active',
+                    user_id: '2',
+                }
+            ]);
+        });
     });
-    // Not needed b/c down migration will be run after all tests pass
-    //   afterAll(async function () {
-    //     orderStore.removeProductFromOrder('1');
-    //     orderStore.removeProductFromOrder('2');
-    //     orderStore.removeProductFromOrder('3');
-    //     orderStore.removeProductFromOrder('4');
-    //     orderStore.removeProductFromOrder('5');
-    //     orderStore.delete('1');
-    //     orderStore.delete('2');
-    //     orderStore.delete('3');
-    //     orderStore.delete('4');
-    //     productStore.delete('1');
-    //     productStore.delete('2');
-    //     productStore.delete('3');
-    //     productStore.delete('4');
-    //     productStore.delete('5');
-    //     productStore.delete('6');
-    //     userStore.delete('1');
-    //     userStore.delete('2');
-    //     userStore.delete('3');
-    //   });
 });

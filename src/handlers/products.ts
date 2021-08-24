@@ -38,12 +38,23 @@ const create = async (req: Request, res: Response) => {
   }
 };
 
+const destroy = async (req: Request, res: Response) => {
+  try {
+    const deleted = await store.delete(req.params.id);
+    res.json(deleted);
+  } catch (error) {
+    res.status(400);
+    res.json({ error });
+  }
+};
+
+
 const product_routes = (app: express.Application) => {
   app.get('/products', index);
   app.get('/products/:id', show);
   app.post('/products', verifyToken, create);
   app.get('/products/category/:category', productsByCategory);
-  // app.delete('/products/delete/:id', destroy);
+  app.delete('/products/delete/:id', verifyToken, destroy);
 };
 
 export default product_routes;

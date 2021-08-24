@@ -35,11 +35,21 @@ const create = async (req: Request, res: Response) => {
   }
 };
 
+const destroy = async (req: Request, res: Response) => {
+  try {
+    const deleted = await store.delete(req.params.id);
+    res.json(deleted);
+  } catch (error) {
+    res.status(400);
+    res.json({ error });
+  }
+};
+
 const user_routes = (app: express.Application) => {
   app.get('/users', verifyToken, index);
   app.get(`/users/:id`, verifyToken, show);
   app.post('/users', create);
-  // app.delete(`/users/delete/:id`, destroy);
+  app.delete(`/users/delete/:id`, verifyToken, destroy);
 };
 
 export default user_routes;
@@ -47,26 +57,6 @@ export default user_routes;
 // const destroy = async (req: Request, res: Response) => {
 //   const deleted = await store.delete(req.body.id);
 //   res.json(deleted);
-// };
-
-// const destroy = async (req: Request, res: Response) => {
-//   try {
-//     const authorizationHeader = req.headers.authorization!;
-//     const token = authorizationHeader.split(' ')[1];
-//     jwt.verify(token, process.env.TOKEN_SECRET!);
-//   } catch (err) {
-//     res.status(401);
-//     res.json('Access denied, invalid token');
-//     return;
-//   }
-
-//   try {
-//     const deleted = await store.delete(req.body.id);
-//     res.json(deleted);
-//   } catch (error) {
-//     res.status(400);
-//     res.json({ error });
-//   }
 // };
 
 // const update = async (req: Request, res: Response) => {

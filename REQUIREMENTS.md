@@ -9,15 +9,22 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Show: '/products/:id' [GET]
 - Create [token required]: '/products' [POST]  
 - [OPTIONAL] Products by category (args: product category): '/products/category/:category' [GET] 
+- Delete [token required]: '/products/delete/:id' [DELETE]
 
 #### Users
 - Index [token required]: '/users' [GET] 
 - Show [token required]: '/users/:id' [GET]
 - Create N[token required]: '/users' [POST]   
+- Delete [token required]: '/users/delete/:id' [DELETE]
 
 #### Orders
+- Index [token required]: '/orders'[GET]
+- Show [token required]: '/orders/:id' [GET]
+- Create [token required]: '/orders' [POST]
+- Add Product to order [token required]: '/orders/:order_id/add' [POST]
 - Current Order by user (args: user id)[token required]: '/orders/current/:user_id' [GET]
-
+- Remove Product from order [token required]: '/orders/:order_id/remove/:product_id' [DELETE]
+- Delete [token required]: '/orders/delete/:id' [DELETE]
 
 ## Data Shapes
 #### Product

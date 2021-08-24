@@ -46,7 +46,7 @@ class OrderStore {
         }
     }
     async addProduct(order_id, product_id, quantity) {
-        // get order to see if it is active
+        // get order to see if it is active, FOR REFERENCE 
         // try {
         //   const ordersql = 'SELECT * FROM orders WHERE id=($1)';
         //   //@ts-ignore
@@ -78,7 +78,6 @@ class OrderStore {
     async delete(id) {
         try {
             const sql = 'DELETE FROM orders WHERE id=($1)';
-            // @ts-ignore
             const conn = await database_1.default.connect();
             const result = await conn.query(sql, [id]);
             const order = result.rows[0];
@@ -102,18 +101,31 @@ class OrderStore {
             throw new Error(`unable get products and orders: ${err}`);
         }
     }
-    async removeProductFromOrder(id) {
+    async removeProductFromOrder(order_id, product_id) {
         try {
-            const sql = 'DELETE FROM order_products WHERE id=($1)';
+            const sql = 'DELETE FROM order_products WHERE order_id=($1) AND product_id=($2)';
             // @ts-ignore
             const conn = await database_1.default.connect();
-            const result = await conn.query(sql, [id]);
+            const result = await conn.query(sql, [order_id, product_id]);
             const order = result.rows[0];
             conn.release();
             return order;
         }
         catch (err) {
-            throw new Error(`Could not delete order ${id}. Error: ${err}`);
+            throw new Error(`Could not delete product ${product_id} from order ${order_id}. Error: ${err}`);
+        }
+    }
+    // ONLY USED FOR TESTING removeProductFromOrder so no associated endpoint or test
+    async indexOrderProductsTable() {
+        try {
+            const conn = await database_1.default.connect();
+            const sql = 'SELECT * FROM order_products';
+            const result = await conn.query(sql);
+            conn.release();
+            return result.rows;
+        }
+        catch (err) {
+            throw new Error(`Cannot get orders. Error: ${err}`);
         }
     }
 }

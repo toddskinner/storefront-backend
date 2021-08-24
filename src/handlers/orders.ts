@@ -16,15 +16,15 @@ const show = async (req: Request, res: Response) => {
 };
 
 const create = async (req: Request, res: Response) => {
-  try {
-    const authorizationHeader = req.headers.authorization!;
-    const token = authorizationHeader.split(' ')[1];
-    jwt.verify(token, process.env.TOKEN_SECRET!);
-  } catch (err) {
-    res.status(401);
-    res.json('Access denied, invalid token');
-    return;
-  }
+  // try {
+  //   const authorizationHeader = req.headers.authorization!;
+  //   const token = authorizationHeader.split(' ')[1];
+  //   jwt.verify(token, process.env.TOKEN_SECRET!);
+  // } catch (err) {
+  //   res.status(401);
+  //   res.json('Access denied, invalid token');
+  //   return;
+  // }
 
   try {
     const order: Order = {
@@ -42,19 +42,19 @@ const create = async (req: Request, res: Response) => {
 
 const addProduct = async (req: Request, res: Response) => {
   // check if this should be .id or .order_id
-  const order_id: string = req.params.id;
+  const order_id: string = req.params.order_id;
   const product_id: string = req.body.product_id;
   const quantity: number = parseInt(req.body.quantity);
 
-  try {
-    const authorizationHeader = req.headers.authorization!;
-    const token = authorizationHeader.split(' ')[1];
-    jwt.verify(token, process.env.TOKEN_SECRET!);
-  } catch (err) {
-    res.status(401);
-    res.json('Access denied, invalid token');
-    return;
-  }
+  // try {
+  //   const authorizationHeader = req.headers.authorization!;
+  //   const token = authorizationHeader.split(' ')[1];
+  //   jwt.verify(token, process.env.TOKEN_SECRET!);
+  // } catch (err) {
+  //   res.status(401);
+  //   res.json('Access denied, invalid token');
+  //   return;
+  // }
 
   try {
     const addedProduct = await store.addProduct(order_id, product_id, quantity);
@@ -75,19 +75,21 @@ const currentOrderAndProducts = async (req: Request, res: Response) => {
   }
 };
 
+const removeProductFromOrder = async (req: Request, res: Response) => {
+  const order_id = req.params.order_id;
+  const product_id = req.params.product_id;
+  try {
+    const deleted = await store.removeProductFromOrder(order_id, product_id);
+    res.json(deleted);
+  } catch (error) {
+    res.status(400);
+    res.json({ error });
+  }
+};
+
 const destroy = async (req: Request, res: Response) => {
   try {
-    const authorizationHeader = req.headers.authorization!;
-    const token = authorizationHeader.split(' ')[1];
-    jwt.verify(token, process.env.TOKEN_SECRET!);
-  } catch (err) {
-    res.status(401);
-    res.json('Access denied, invalid token');
-    return;
-  }
-
-  try {
-    const deleted = await store.delete(req.body.id);
+    const deleted = await store.delete(req.params.id);
     res.json(deleted);
   } catch (error) {
     res.status(400);
@@ -96,7 +98,13 @@ const destroy = async (req: Request, res: Response) => {
 };
 
 const order_routes = (app: express.Application) => {
+  app.get('/orders', verifyToken, index);
+  app.get(`/orders/:id`, verifyToken, show);
+  app.post('/orders', verifyToken, create);
+  app.post('/orders/:order_id/add', verifyToken, addProduct);  
   app.get('/orders/current/:user_id', verifyToken, currentOrderAndProducts);
+  app.delete(`/orders/:order_id/remove/:product_id`, verifyToken, removeProductFromOrder);
+  app.delete(`/orders/delete/:id`, verifyToken, destroy);
 };
 
 export default order_routes;

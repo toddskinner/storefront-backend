@@ -64,7 +64,7 @@ export class OrderStore {
     product_id: string;
     quantity: number;
   }> {
-    // get order to see if it is active
+    // get order to see if it is active, FOR REFERENCE 
     // try {
     //   const ordersql = 'SELECT * FROM orders WHERE id=($1)';
     //   //@ts-ignore
@@ -108,7 +108,7 @@ export class OrderStore {
   async delete(id: string): Promise<Order> {
     try {
       const sql = 'DELETE FROM orders WHERE id=($1)';
-      // @ts-ignore
+      
       const conn = await Client.connect();
 
       const result = await conn.query(sql, [id]);
@@ -152,13 +152,19 @@ export class OrderStore {
     }
   }
 
-  async removeProductFromOrder(id: string): Promise<Order> {
+  async removeProductFromOrder(order_id: string, product_id: string): Promise<
+  {
+    id: number;
+    order_id: string;
+    product_id: string;
+    quantity: number;}
+  > {
     try {
-      const sql = 'DELETE FROM order_products WHERE id=($1)';
+      const sql = 'DELETE FROM order_products WHERE order_id=($1) AND product_id=($2)';
       // @ts-ignore
       const conn = await Client.connect();
 
-      const result = await conn.query(sql, [id]);
+      const result = await conn.query(sql, [order_id, product_id]);
 
       const order = result.rows[0];
 
@@ -166,7 +172,25 @@ export class OrderStore {
 
       return order;
     } catch (err) {
-      throw new Error(`Could not delete order ${id}. Error: ${err}`);
+      throw new Error(`Could not delete product ${product_id} from order ${order_id}. Error: ${err}`);
+    }
+  }
+
+  // ONLY USED FOR TESTING removeProductFromOrder so no associated endpoint or test
+  async indexOrderProductsTable(): Promise<{
+      id: number,
+      quantity: number;
+      order_id: string;
+      product_id: string;
+  }[]> {
+    try {
+      const conn = await Client.connect();
+      const sql = 'SELECT * FROM order_products';
+      const result = await conn.query(sql);
+      conn.release();
+      return result.rows;
+    } catch (err) {
+      throw new Error(`Cannot get orders. Error: ${err}`);
     }
   }
 }

@@ -35,12 +35,22 @@ const create = async (req, res) => {
         res.json(err);
     }
 };
+const destroy = async (req, res) => {
+    try {
+        const deleted = await store.delete(req.params.id);
+        res.json(deleted);
+    }
+    catch (error) {
+        res.status(400);
+        res.json({ error });
+    }
+};
 const product_routes = (app) => {
     app.get('/products', index);
     app.get('/products/:id', show);
     app.post('/products', verifyToken_1.default, create);
     app.get('/products/category/:category', productsByCategory);
-    // app.delete('/products/delete/:id', destroy);
+    app.delete('/products/delete/:id', verifyToken_1.default, destroy);
 };
 exports.default = product_routes;
 // const destroy = async (req: Request, res: Response) => {
